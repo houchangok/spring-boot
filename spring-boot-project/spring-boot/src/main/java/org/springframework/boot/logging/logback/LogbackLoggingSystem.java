@@ -101,11 +101,15 @@ public class LogbackLoggingSystem extends Slf4JLoggingSystem {
 
 	@Override
 	public void beforeInitialize() {
+		//获得loggerContext
 		LoggerContext loggerContext = getLoggerContext();
+		//若已经初始化，则直接返回
 		if (isAlreadyInitialized(loggerContext)) {
 			return;
 		}
+		//调用父类的beforeInitialize
 		super.beforeInitialize();
+		//加入一个filter，目的是在loggerContext没有初始化之前，拒绝所有的日志打印请求
 		loggerContext.getTurboFilterList().add(FILTER);
 	}
 

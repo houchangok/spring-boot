@@ -149,12 +149,16 @@ public abstract class LoggingSystem {
 	 */
 	public static LoggingSystem get(ClassLoader classLoader) {
 		String loggingSystem = System.getProperty(SYSTEM_PROPERTY);
+		/**
+		 * 系统变量中存在，loggingsystem类名
+		 */
 		if (StringUtils.hasLength(loggingSystem)) {
 			if (NONE.equals(loggingSystem)) {
 				return new NoOpLoggingSystem();
 			}
 			return get(classLoader, loggingSystem);
 		}
+		//从map中加载，反射判断
 		return SYSTEMS.entrySet().stream().filter((entry) -> ClassUtils.isPresent(entry.getKey(), classLoader))
 				.map((entry) -> get(classLoader, entry.getValue())).findFirst()
 				.orElseThrow(() -> new IllegalStateException("No suitable logging system located"));

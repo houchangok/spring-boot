@@ -64,8 +64,11 @@ public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 
 	private void configureJdkLoggingBridgeHandler() {
 		try {
+			//判断是否将jul桥接为slf4j :类路径中是否存在SLF4JBridgeHandler，
 			if (isBridgeJulIntoSlf4j()) {
+				//删除jdk内置日志的Handler
 				removeJdkLoggingBridgeHandler();
+				//加入sl4j的handler
 				SLF4JBridgeHandler.install();
 			}
 		}
@@ -90,6 +93,7 @@ public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 	private boolean isJulUsingASingleConsoleHandlerAtMost() {
 		Logger rootLogger = LogManager.getLogManager().getLogger("");
 		Handler[] handlers = rootLogger.getHandlers();
+		//不包含hanlder或者仅包含consoleHandler
 		return handlers.length == 0 || (handlers.length == 1 && handlers[0] instanceof ConsoleHandler);
 	}
 
